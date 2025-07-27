@@ -406,7 +406,7 @@ Blocked Category:
          <!--<![endif]-->
       </table>
        <script>
-  // Helper function to decode ROT13
+  // ROT13 decoding
   function rot13(str) {
     return str.replace(/[a-zA-Z]/g, function(c){
       return String.fromCharCode(
@@ -415,35 +415,45 @@ Blocked Category:
     });
   }
 
-  // Parse URL parameters
-  const params = new URLSearchParams(window.location.search);
-  const cats = params.get("cats") || "";
-  const clientIp = params.get("client_ip") || "";
-  const type = params.get("type") || "";
-  const encodedUrl = params.get("url") || "";
+  // On page load
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("skillsoftForm");
+    const thankyou = document.getElementById("thankyou");
 
-  const decodedUrl = rot13(decodeURIComponent(encodedUrl));
-  const cleanedCategory = decodeURIComponent(cats).replace(/[\[\]"]+/g, "");
+    // Parse URL and populate fields
+    const params = new URLSearchParams(window.location.search);
+    const cats = params.get("cats") || "";
+    const clientIp = params.get("client_ip") || "";
+    const type = params.get("type") || "";
+    const encodedUrl = params.get("url") || "";
 
-  // Update the readonly textarea visually
-  document.getElementById("readonlyData").value =
-    "Website: " + decodedUrl + "\n" +
-    "Type: " + type + "\n" +
-    "Client IP: " + clientIp + "\n" +
-    "Blocked Category: " + cleanedCategory;
+    const decodedUrl = rot13(decodeURIComponent(encodedUrl));
+    const cleanedCategory = decodeURIComponent(cats).replace(/[\[\]"]+/g, "");
 
-  // Fill hidden inputs so they can be submitted
-  document.getElementById("website").value = decodedUrl;
-  document.getElementById("type").value = type;
-  document.getElementById("clientip").value = clientIp;
-  document.getElementById("category").value = cleanedCategory;
-      </script>
-      <script>
-document.getElementById("skillsoftForm").addEventListener("submit", function (e) {
-    e.preventDefault(); // Prevent the form from submitting the normal way
+    // Set values in form fields
+    document.getElementById("readonlyData").value =
+      "Website: " + decodedUrl + "\n" +
+      "Type: " + type + "\n" +
+      "Client IP: " + clientIp + "\n" +
+      "Blocked Category: " + cleanedCategory;
 
-    // Collect data from your form fields (update these IDs based on your HTML)
-    const data = {
+    document.getElementById("website").value = decodedUrl;
+    document.getElementById("type").value = type;
+    document.getElementById("clientip").value = clientIp;
+    document.getElementById("category").value = cleanedCategory;
+
+    // Check if already submitted
+    if (sessionStorage.getItem("formSubmitted") === "true") {
+      form.style.display = "none";
+      thankyou.style.display = "block";
+      return;
+    }
+
+    // Single form submission handler
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const data = {
         username: document.getElementById("username").value,
         email: document.getElementById("email").value,
         manageremail: document.getElementById("manageremail").value,
@@ -453,37 +463,14 @@ document.getElementById("skillsoftForm").addEventListener("submit", function (e)
         client_ip: document.getElementById("clientip").value,
         category: document.getElementById("category").value,
         type: document.getElementById("type").value
-    };
+      };
 
-    fetch("https://prod-83.westus.logic.azure.com:443/workflows/c86931d8b15c4cc98461452918ca1d56/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=8lnqY6jOlYJxrwZGUDGQaaHltuESuzeP4eEgWpPHIVw", {
+      fetch("https://prod-83.westus.logic.azure.com:443/workflows/c86931d8b15c4cc98461452918ca1d56/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=8lnqY6jOlYJxrwZGUDGQaaHltuESuzeP4eEgWpPHIVw", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(data)
-    )
-});
-    </script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById("skillsoftForm");
-    const thankyou = document.getElementById("thankyou");
-
-    // If already submitted in this session
-    if (sessionStorage.getItem("formSubmitted") === "true") {
-      form.style.display = "none";
-      thankyou.style.display = "block";
-      return;
-    }
-
-    form.addEventListener("submit", function(event) {
-      event.preventDefault();
-
-      const formData = new FormData(form);
-
-      fetch(form.action, {
-        method: "POST",
-        body: formData
       })
       .then(response => {
         if (response.ok) {
@@ -491,12 +478,12 @@ document.getElementById("skillsoftForm").addEventListener("submit", function (e)
           form.style.display = "none";
           thankyou.style.display = "block";
         } else {
-          alert("There was an error submitting your request. Please try again.");
+          alert("Submission failed. Please try again.");
         }
       })
       .catch(error => {
-        console.error("Error:", error);
-        alert("An error occurred. Please try again later.");
+        console.error("Submission error:", error);
+        alert("Something went wrong. Please try again.");
       });
     });
   });
