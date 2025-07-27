@@ -154,7 +154,7 @@
       </style>
       <![endif]-->
       <style>  
-         .uppercase-text span {text-transform: uppercase;}
+         .uppercase-text span {text-trans: uppercase;}
          .hover-effect a:hover{background-color: #DA3466;border-radius: 4px;}
          .hover-effect a:hover span{text-decoration:underline!important;}
          .hover-effect a:hover p{text-decoration:underline!important;}  
@@ -280,7 +280,18 @@
                                           <form id='skillsoftForm' method='post' action='/api/umbrella?code=Dzzo6s1IvTeA0aCN-U_pOcsM0JK8OZVfnp0Yhy_7ikRzAzFuv0eN9g%3D%3D' onsubmit="return validateForm()"> 
                                           <input type='text' id='email' name='email' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your email address">
                                           <input type='text' id='justification' name='justification' required placeholder="Please explain why this is required">                          
-                                          <textarea id='readonlyData' name='readonlyData' rows='5' cols='30' readonly style="background-color: #e9ecef; resize: none;">Website: 
+                                          <label for="managerEmail">Manager Email:</label><br>
+                                             <input type="email" id="managerEmail" name="managerEmail" required><br><br>
+
+                                             <label for="userName">User Name:</label><br>
+                                             <input type="text" id="userName" name="userName" required><br><br>
+
+                                             <label for="reason">Reason for Access:</label><br>
+                                             <input type="text" id="reason" name="reason" required><br><br>
+
+                                             <label for="duration">Duration (in days):</label><br>
+                                             <input type="number" id="duration" name="duration" min="1" required><br><br>
+                                             <textarea id='readonlyData' name='readonlyData' rows='5' cols='30' readonly style="background-color: #e9ecef; resize: none;">Website: 
 Type: 
 Client IP: 
 Blocked Category: 
