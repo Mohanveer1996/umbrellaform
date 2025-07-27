@@ -278,20 +278,12 @@
                                                 <b>You are trying to access a site which is blocked by our company security policies.</b>
                                                 If you require access as part of your job, simply fill in the details below. Standard requests will be sent directly to your manager for approval.  All other requests will be reviewed by the security team.</b></br>            
                                           <form id='skillsoftForm' method='post' action='/api/umbrella?code=Dzzo6s1IvTeA0aCN-U_pOcsM0JK8OZVfnp0Yhy_7ikRzAzFuv0eN9g%3D%3D' onsubmit="return validateForm()"> 
+                                          <input type='text' id='Username' name='Username' required placeholder="Enter your Name">
                                           <input type='text' id='email' name='email' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your email address">
-                                          <input type='text' id='justification' name='justification' required placeholder="Please explain why this is required">                          
-                                          <label for="managerEmail">Manager Email:</label><br>
-                                             <input type="email" id="managerEmail" name="managerEmail" required><br><br>
-
-                                             <label for="userName">User Name:</label><br>
-                                             <input type="text" id="userName" name="userName" required><br><br>
-
-                                             <label for="reason">Reason for Access:</label><br>
-                                             <input type="text" id="reason" name="reason" required><br><br>
-
-                                             <label for="duration">Duration (in days):</label><br>
-                                             <input type="number" id="duration" name="duration" min="1" required><br><br>
-                                             <textarea id='readonlyData' name='readonlyData' rows='5' cols='30' readonly style="background-color: #e9ecef; resize: none;">Website: 
+                                          <input type='text' id='manageremail' name='Manageremail' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your Manager's email address">
+                                          <input type='text' id='justification' name='justification' required placeholder="Please provide the reason for access">
+                                          <input type="number" id="duration" name="duration" min="1" required placeholder="Enter number of days">
+                                          <textarea id='readonlyData' name='readonlyData' rows='5' cols='30' readonly style="background-color: #e9ecef; resize: none;">Website: 
 Type: 
 Client IP: 
 Blocked Category: 
