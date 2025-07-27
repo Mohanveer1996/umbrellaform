@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
    xmlns:v="urn:schemas-microsoft-com:vml"
@@ -277,7 +278,7 @@
                                              <span style="font-size: 14px; line-height: 24px;">
                                                 <b>You are trying to access a site which is blocked by our company security policies.</b>
                                                 If you require access as part of your job, simply fill in the details below. Standard requests will be sent directly to your manager for approval.  All other requests will be reviewed by the security team.</b></br>            
-                                          <form id='skillsoftForm method='post'> 
+                                          <form id='skillsoftForm'> 
                                           <input type='text' id='username' name='Username' required placeholder="Enter your Name">
                                           <input type='text' id='email' name='email' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your email address">
                                           <input type='text' id='manageremail' name='Manageremail' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your Manager's email address">
@@ -295,10 +296,6 @@ Blocked Category:
                                           </div><br />
                                           <input type='submit' value='REQUEST ACCESS'>
                                           </form>
-                                          <div id="thankyou" style="display: none; padding: 20px; background: #d4edda; border: 1px solid #c3e6cb; color: #155724; margin-top: 20px;">
-                                          <h3>Thank you!</h3>
-                                          <p>Your request has been submitted successfully.</p>
-                                          </div>
                                           </span><br />
                                           </p>
                                           <p style="margin: 0px;"><span style="font-size: 14px; line-height: 24px;">
@@ -406,7 +403,7 @@ Blocked Category:
          <!--<![endif]-->
       </table>
        <script>
-  // ROT13 decoding
+  // Helper function to decode ROT13
   function rot13(str) {
     return str.replace(/[a-zA-Z]/g, function(c){
       return String.fromCharCode(
@@ -415,45 +412,35 @@ Blocked Category:
     });
   }
 
-  // On page load
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("skillsoftForm");
-    const thankyou = document.getElementById("thankyou");
+  // Parse URL parameters
+  const params = new URLSearchParams(window.location.search);
+  const cats = params.get("cats") || "";
+  const clientIp = params.get("client_ip") || "";
+  const type = params.get("type") || "";
+  const encodedUrl = params.get("url") || "";
 
-    // Parse URL and populate fields
-    const params = new URLSearchParams(window.location.search);
-    const cats = params.get("cats") || "";
-    const clientIp = params.get("client_ip") || "";
-    const type = params.get("type") || "";
-    const encodedUrl = params.get("url") || "";
+  const decodedUrl = rot13(decodeURIComponent(encodedUrl));
+  const cleanedCategory = decodeURIComponent(cats).replace(/[\[\]"]+/g, "");
 
-    const decodedUrl = rot13(decodeURIComponent(encodedUrl));
-    const cleanedCategory = decodeURIComponent(cats).replace(/[\[\]"]+/g, "");
+  // Update the readonly textarea visually
+  document.getElementById("readonlyData").value =
+    "Website: " + decodedUrl + "\n" +
+    "Type: " + type + "\n" +
+    "Client IP: " + clientIp + "\n" +
+    "Blocked Category: " + cleanedCategory;
 
-    // Set values in form fields
-    document.getElementById("readonlyData").value =
-      "Website: " + decodedUrl + "\n" +
-      "Type: " + type + "\n" +
-      "Client IP: " + clientIp + "\n" +
-      "Blocked Category: " + cleanedCategory;
+  // Fill hidden inputs so they can be submitted
+  document.getElementById("website").value = decodedUrl;
+  document.getElementById("type").value = type;
+  document.getElementById("clientip").value = clientIp;
+  document.getElementById("category").value = cleanedCategory;
+      </script>
+      <script>
+document.getElementById("skillsoftForm").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent the form from submitting the normal way
 
-    document.getElementById("website").value = decodedUrl;
-    document.getElementById("type").value = type;
-    document.getElementById("clientip").value = clientIp;
-    document.getElementById("category").value = cleanedCategory;
-
-    // Check if already submitted
-    if (sessionStorage.getItem("formSubmitted") === "true") {
-      form.style.display = "none";
-      thankyou.style.display = "block";
-      return;
-    }
-
-    // Single form submission handler
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const data = {
+    // Collect data from your form fields (update these IDs based on your HTML)
+    const data = {
         username: document.getElementById("username").value,
         email: document.getElementById("email").value,
         manageremail: document.getElementById("manageremail").value,
@@ -463,30 +450,28 @@ Blocked Category:
         client_ip: document.getElementById("clientip").value,
         category: document.getElementById("category").value,
         type: document.getElementById("type").value
-      };
+    };
 
-      fetch("https://prod-83.westus.logic.azure.com:443/workflows/c86931d8b15c4cc98461452918ca1d56/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=8lnqY6jOlYJxrwZGUDGQaaHltuESuzeP4eEgWpPHIVw", {
+    fetch("https://prod-83.westus.logic.azure.com:443/workflows/c86931d8b15c4cc98461452918ca1d56/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=8lnqY6jOlYJxrwZGUDGQaaHltuESuzeP4eEgWpPHIVw", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(data)
-      })
-      .then(response => {
+    })
+    .then(response => {
         if (response.ok) {
-          sessionStorage.setItem("formSubmitted", "true");
-          form.style.display = "none";
-          thankyou.style.display = "block";
+            alert("Request submitted successfully.");
+            document.getElementById("skillsoftForm").reset();
         } else {
-          alert("Submission failed. Please try again.");
+            alert("Submission failed.");
         }
-      })
-      .catch(error => {
-        console.error("Submission error:", error);
-        alert("Something went wrong. Please try again.");
-      });
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred.");
     });
-  });
-</script>
+});
+    </script>
    </body>
 </html>
