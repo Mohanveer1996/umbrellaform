@@ -404,36 +404,48 @@ Blocked Category:
       </table>
        <script>
   // Helper function to decode ROT13
-  function rot13(str) {
-    return str.replace(/[a-zA-Z]/g, function(c){
-      return String.fromCharCode(
-        (c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
-      );
-    });
-  }
+function rot13(str) {
+  return str.replace(/[a-zA-Z]/g, function (c) {
+    return String.fromCharCode(
+      (c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
+    );
+  });
+}
 
-  // Parse URL parameters
-  const params = new URLSearchParams(window.location.search);
-  const cats = params.get("cats") || "";
-  const clientIp = params.get("client_ip") || "";
-  const type = params.get("type") || "";
-  const encodedUrl = params.get("url") || "";
+// Parse URL parameters
+const params = new URLSearchParams(window.location.search);
+const cats = params.get("cats") || "";
+const clientIp = params.get("client_ip") || "";
+const type = params.get("type") || "";
+const encodedUrl = params.get("url") || "";
 
-  const decodedUrl = rot13(decodeURIComponent(encodedUrl));
-  const cleanedCategory = decodeURIComponent(cats).replace(/[\[\]"]+/g, "");
+// Decode URL and extract domain
+const fullDecodedUrl = rot13(decodeURIComponent(encodedUrl));
+let domainOnly = "";
 
-  // Update the readonly textarea visually
-  document.getElementById("readonlyData").value =
-    "Website: " + decodedUrl + "\n" +
-    "Type: " + type + "\n" +
-    "Client IP: " + clientIp + "\n" +
-    "Blocked Category: " + cleanedCategory;
+try {
+  const parsed = new URL(fullDecodedUrl);
+  domainOnly = parsed.hostname;
+} catch (e) {
+  console.error("Invalid decoded URL:", fullDecodedUrl);
+  domainOnly = fullDecodedUrl; // fallback if it's not a valid URL
+}
 
-  // Fill hidden inputs so they can be submitted
-  document.getElementById("website").value = decodedUrl;
-  document.getElementById("type").value = type;
-  document.getElementById("clientip").value = clientIp;
-  document.getElementById("category").value = cleanedCategory;
+const cleanedCategory = decodeURIComponent(cats).replace(/[\[\]"]+/g, "");
+
+// Update the readonly textarea visually
+document.getElementById("readonlyData").value =
+  "Website: " + domainOnly + "\n" +
+  "Type: " + type + "\n" +
+  "Client IP: " + clientIp + "\n" +
+  "Blocked Category: " + cleanedCategory;
+
+// Fill hidden inputs so they can be submitted
+document.getElementById("website").value = domainOnly;
+document.getElementById("type").value = type;
+document.getElementById("clientip").value = clientIp;
+document.getElementById("category").value = cleanedCategory;
+
       </script>
       <script>
 document.getElementById("skillsoftForm").addEventListener("submit", function (e) {
