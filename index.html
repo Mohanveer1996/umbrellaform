@@ -277,7 +277,7 @@
                                              <span style="font-size: 14px; line-height: 24px;">
                                                 <b>You are trying to access a site which is blocked by our company security policies.</b>
                                                 If you require access as part of your job, simply fill in the details below. Standard requests will be sent directly to your manager for approval.  All other requests will be reviewed by the security team.</b></br>            
-                                          <form id='skillsoftForm'> 
+                                          <form id='skillsoftForm method='post'> 
                                           <input type='text' id='username' name='Username' required placeholder="Enter your Name">
                                           <input type='text' id='email' name='email' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your email address">
                                           <input type='text' id='manageremail' name='Manageremail' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your Manager's email address">
@@ -295,6 +295,10 @@ Blocked Category:
                                           </div><br />
                                           <input type='submit' value='REQUEST ACCESS'>
                                           </form>
+                                          <div id="thankyou" style="display: none; padding: 20px; background: #d4edda; border: 1px solid #c3e6cb; color: #155724; margin-top: 20px;">
+                                          <h3>Thank you!</h3>
+                                          <p>Your request has been submitted successfully.</p>
+                                          </div>
                                           </span><br />
                                           </p>
                                           <p style="margin: 0px;"><span style="font-size: 14px; line-height: 24px;">
@@ -457,20 +461,45 @@ document.getElementById("skillsoftForm").addEventListener("submit", function (e)
             "Content-Type": "application/json"
         },
         body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (response.ok) {
-            alert("Request submitted successfully.");
-            document.getElementById("skillsoftForm").reset();
-        } else {
-            alert("Submission failed.");
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("An error occurred.");
-    });
+    )
 });
     </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("skillsoftForm");
+    const thankyou = document.getElementById("thankyou");
+
+    // If already submitted in this session
+    if (sessionStorage.getItem("formSubmitted") === "true") {
+      form.style.display = "none";
+      thankyou.style.display = "block";
+      return;
+    }
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+
+      fetch(form.action, {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          sessionStorage.setItem("formSubmitted", "true");
+          form.style.display = "none";
+          thankyou.style.display = "block";
+        } else {
+          alert("There was an error submitting your request. Please try again.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again later.");
+      });
+    });
+  });
+</script>
    </body>
 </html>
