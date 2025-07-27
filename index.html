@@ -400,5 +400,42 @@ Blocked Reason:
          </tr>
          <!--<![endif]-->
       </table>
+      <script>
+  // Function to extract query parameters
+  function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      category: decodeURIComponent(params.get("cats") || ""),
+      clientIP: decodeURIComponent(params.get("client_ip") || ""),
+      type: decodeURIComponent(params.get("type") || ""),
+      encodedUrl: decodeURIComponent(params.get("url") || "")
+    };
+  }
+
+  // ROT13 decoding logic for the URL
+  function rot13(str) {
+    return str.replace(/[a-zA-Z]/g, function (c) {
+      return String.fromCharCode(
+        (c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
+      );
+    });
+  }
+
+  // On page load, autofill the textarea
+  window.onload = function () {
+    const params = getQueryParams();
+    const decodedURL = rot13(params.encodedUrl);
+
+    const details = `Website: ${decodedURL}
+Type: ${params.type}
+Client IP: ${params.clientIP}
+Blocked Category: ${params.category}`;
+
+    const textarea = document.getElementById("details-box");
+    if (textarea) {
+      textarea.value = details;
+    }
+  };
+   </script>
    </body>
 </html>
