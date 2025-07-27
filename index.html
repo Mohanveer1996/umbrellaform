@@ -433,43 +433,6 @@ Blocked Category: ${cleanedCat}`;
   };
       </script>
       <script>
-document.getElementById("REQUEST ACCESS").addEventListener("click", function(e) {
-    e.preventDefault();
-
-    const data = {
-        username: document.getElementById("username").value,
-        email: document.getElementById("email").value,
-        manageremail: document.getElementById("manageremail").value,
-        reason: document.getElementById("reason").value,
-        duration: document.getElementById("duration").value,
-        website: document.getElementById("website").value,
-        client_ip: document.getElementById("clientip").value,
-        category: document.getElementById("category").value,
-        type: document.getElementById("type").value
-    };
-
-    fetch("https://prod-83.westus.logic.azure.com:443/workflows/c86931d8b15c4cc98461452918ca1d56/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=8lnqY6jOlYJxrwZGUDGQaaHltuESuzeP4eEgWpPHIVw", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (response.ok) {
-            alert("Request submitted successfully!");
-            window.location.href = "https://your-success-page.com"; // optional redirect
-        } else {
-            alert("Submission failed!");
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("An error occurred.");
-    });
-});
-      </script>
-      <script>
 document.getElementById("skillsoftForm").addEventListener("submit", function (e) {
     e.preventDefault(); // Prevent the form from submitting the normal way
 
