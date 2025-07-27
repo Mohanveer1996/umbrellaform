@@ -278,20 +278,20 @@
                                                 <b>You are trying to access a site which is blocked by our company security policies.</b>
                                                 If you require access as part of your job, simply fill in the details below. Standard requests will be sent directly to your manager for approval.  All other requests will be reviewed by the security team.</b></br>            
                                           <form id='skillsoftForm'> 
-                                          <input type='text' id='Username' name='Username' required placeholder="Enter your Name">
+                                          <input type='text' id='username' name='Username' required placeholder="Enter your Name">
                                           <input type='text' id='email' name='email' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your email address">
                                           <input type='text' id='manageremail' name='Manageremail' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your Manager's email address">
-                                          <input type='text' id='justification' name='justification' required placeholder="Please provide the reason for access">
-                                          <input type="text" id="Duration" name="Duration" pattern="[0-1000]" required placeholder="Enter number of days access required">
+                                          <input type='text' id='reason' name='reason' required placeholder="Please provide the reason for access">
+                                          <input type="text" id="duration" name="duration" required placeholder="Enter number of days access required">
                                           <textarea id='readonlyData' name='readonlyData' rows='5' cols='30' readonly style="background-color: #e9ecef; resize: none;">Website: 
 Type: 
 Client IP: 
 Blocked Category: 
                                         </textarea>
-                                           <input type='hidden' name='url' value=''> 
-                                           <input type='hidden' name='type' value=''> 
-                                           <input type='hidden' name='client_ip' value=''> 
-                                           <input type='hidden' name='blocked_category' value=''> 
+                                           <input type='hidden' id='website' name='url' value=''> 
+                                           <input type='hidden' id='type' name='type' value=''> 
+                                           <input type='hidden' id='clientip' name='client_ip' value=''> 
+                                           <input type='hidden' id='category'name='blocked_category' value=''> 
                                           </div><br />
                                           <input type='submit' value='REQUEST ACCESS'>
                                           </form>
