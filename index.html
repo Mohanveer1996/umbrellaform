@@ -282,18 +282,16 @@
                                           <input type='text' id='email' name='email' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your email address">
                                           <input type='text' id='manageremail' name='Manageremail' pattern="[a-zA-Z0-9._%+-]+@skillsoft\.com$" required placeholder="Enter your Manager's email address">
                                           <input type='text' id='justification' name='justification' required placeholder="Please provide the reason for access">
-                                          <input type="number" id="duration" name="duration" min="1" required placeholder="Enter number of days">
+                                          <input type="text" id="Duration" name="Duration" pattern="[0-1000]" required placeholder="Enter number of days access required">
                                           <textarea id='readonlyData' name='readonlyData' rows='5' cols='30' readonly style="background-color: #e9ecef; resize: none;">Website: 
 Type: 
 Client IP: 
 Blocked Category: 
-Blocked Reason: 
                                         </textarea>
                                            <input type='hidden' name='url' value=''> 
                                            <input type='hidden' name='type' value=''> 
                                            <input type='hidden' name='client_ip' value=''> 
                                            <input type='hidden' name='blocked_category' value=''> 
-                                           <input type='hidden' name='blocked_reason' value=''> 
                                           </div><br />
                                           <input type='submit' value='REQUEST ACCESS'>
                                           </form>
