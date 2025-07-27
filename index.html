@@ -402,10 +402,9 @@ Blocked Reason:
       </table>
          <script>
   window.onload = function () {
-    // Get all URL parameters
     const params = new URLSearchParams(window.location.search);
 
-    // Decode ROT13-encoded + URL-encoded URL
+    // Decode ROT13-encoded URL
     const eurl = decodeURIComponent(params.get("url") || "");
     const rot13 = str => str.replace(/[a-zA-Z]/g, c =>
       String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26)
@@ -413,7 +412,9 @@ Blocked Reason:
     const decodedURL = rot13(eurl);
 
     // Decode other fields
-    const cat = decodeURIComponent(params.get("cats") || "");
+    const rawCat = decodeURIComponent(params.get("cats") || "");
+    const cleanedCat = rawCat.replace(/[\[\]"]/g, ''); // removes [ ] and "
+
     const cip = decodeURIComponent(params.get("client_ip") || "");
     const typ = decodeURIComponent(params.get("type") || "");
 
@@ -421,10 +422,10 @@ Blocked Reason:
     const details = `Website: ${decodedURL}
 Type: ${typ}
 Client IP: ${cip}
-Blocked Category: ${cat}`;
+Blocked Category: ${cleanedCat}`;
 
     // Fill into the textarea
-    const textarea = document.getElementById("readonlyData");
+    const textarea = document.getElementById("readonlydata");
     if (textarea) {
       textarea.value = details;
     }
