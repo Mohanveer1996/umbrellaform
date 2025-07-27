@@ -401,36 +401,38 @@ Blocked Category:
          </tr>
          <!--<![endif]-->
       </table>
-      <script>
-  window.onload = function () {
-    const params = new URLSearchParams(window.location.search);
+       <script>
+  // Helper function to decode ROT13
+  function rot13(str) {
+    return str.replace(/[a-zA-Z]/g, function(c){
+      return String.fromCharCode(
+        (c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26
+      );
+    });
+  }
 
-    // Decode ROT13-encoded URL
-    const eurl = decodeURIComponent(params.get("url") || "");
-    const rot13 = str => str.replace(/[a-zA-Z]/g, c =>
-      String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26)
-    );
-    const decodedURL = rot13(eurl);
+  // Parse URL parameters
+  const params = new URLSearchParams(window.location.search);
+  const cats = params.get("cats") || "";
+  const clientIp = params.get("client_ip") || "";
+  const type = params.get("type") || "";
+  const encodedUrl = params.get("url") || "";
 
-    // Decode other fields
-    const rawCat = decodeURIComponent(params.get("cats") || "");
-    const cleanedCat = rawCat.replace(/[\[\]"]/g, ''); // removes [ ] and "
+  const decodedUrl = rot13(decodeURIComponent(encodedUrl));
+  const cleanedCategory = decodeURIComponent(cats).replace(/[\[\]"]+/g, "");
 
-    const cip = decodeURIComponent(params.get("client_ip") || "");
-    const typ = decodeURIComponent(params.get("type") || "");
+  // Update the readonly textarea visually
+  document.getElementById("readonlyData").value =
+    "Website: " + decodedUrl + "\n" +
+    "Type: " + type + "\n" +
+    "Client IP: " + clientIp + "\n" +
+    "Blocked Category: " + cleanedCategory;
 
-    // Combine all into display format
-    const details = `Website: ${decodedURL}
-Type: ${typ}
-Client IP: ${cip}
-Blocked Category: ${cleanedCat}`;
-
-    // Fill into the textarea
-    const textarea = document.getElementById("readonlyData");
-    if (textarea) {
-      textarea.value = details;
-    }
-  };
+  // Fill hidden inputs so they can be submitted
+  document.getElementById("website").value = decodedUrl;
+  document.getElementById("type").value = type;
+  document.getElementById("clientip").value = clientIp;
+  document.getElementById("category").value = cleanedCategory;
       </script>
       <script>
 document.getElementById("skillsoftForm").addEventListener("submit", function (e) {
@@ -459,7 +461,7 @@ document.getElementById("skillsoftForm").addEventListener("submit", function (e)
     .then(response => {
         if (response.ok) {
             alert("Request submitted successfully.");
-            document.getElementById("umbrellaForm").reset();
+            document.getElementById("skillsoftForm").reset();
         } else {
             alert("Submission failed.");
         }
